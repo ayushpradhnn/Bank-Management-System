@@ -1,0 +1,428 @@
++-------------------------------+
+| Tables_in_banking_system      |
++-------------------------------+
+| admin                         |
+| branch                        |
+| customeraccounts              |
+| feedback                      |
+| loans                         |
+| login                         |
+| transactions                  |
+| view_customer_feedback        |
+| view_customer_loan_status     |
+| view_customer_transactions    |
+| view_total_loans_per_customer |
++-------------------------------+
+11 rows in set (0.06 sec)
+
+mysql> desc admin;
++----------+------+------+-----+---------+----------------+
+| Field    | Type | Null | Key | Default | Extra          |
++----------+------+------+-----+---------+----------------+
+| adminId  | int  | NO   | PRI | NULL    | auto_increment |
+| branchId | int  | YES  | MUL | NULL    |                |
++----------+------+------+-----+---------+----------------+
+2 rows in set (0.01 sec)
+
+mysql> desc branch;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| branchId   | int          | NO   | PRI | NULL    | auto_increment |
+| branchNo   | varchar(20)  | NO   |     | NULL    |                |
+| branchName | varchar(100) | NO   |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+3 rows in set (0.01 sec)
+
+mysql> desc customeraccounts;
++-------------+-------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Field       | Type                                      | Null | Key | Default           | Extra                                         |
++-------------+-------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| id          | int                                       | NO   | PRI | NULL              | auto_increment                                |
+| name        | varchar(255)                              | YES  |     | NULL              |                                               |
+| balance     | float                                     | YES  |     | NULL              |                                               |
+| cnic        | varchar(20)                               | YES  |     | NULL              |                                               |
+| phone       | varchar(20)                               | YES  |     | NULL              |                                               |
+| city        | varchar(100)                              | YES  |     | NULL              |                                               |
+| address     | text                                      | YES  |     | NULL              |                                               |
+| accountNo   | varchar(20)                               | YES  | UNI | NULL              |                                               |
+| branchId    | int                                       | YES  | MUL | NULL              |                                               |
+| accountType | enum('Savings','Current','Fixed Deposit') | NO   |     | NULL              |                                               |
+| created_at  | timestamp                                 | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
+| lastUpdated | timestamp                                 | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
+| isEditable  | tinyint(1)                                | YES  |     | 1                 |                                               |
+| email       | varchar(255)                              | NO   | UNI | NULL              |                                               |
+| password    | varchar(255)                              | NO   |     | NULL              |                                               |
++-------------+-------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+15 rows in set (0.01 sec)
+
+mysql> desc feedback;
++------------+-----------+------+-----+-------------------+-------------------+
+| Field      | Type      | Null | Key | Default           | Extra             |
++------------+-----------+------+-----+-------------------+-------------------+
+| feedbackId | int       | NO   | PRI | NULL              | auto_increment    |
+| userId     | int       | YES  | MUL | NULL              |                   |
+| message    | text      | NO   |     | NULL              |                   |
+| adminReply | text      | YES  |     | NULL              |                   |
+| date       | timestamp | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++------------+-----------+------+-----+-------------------+-------------------+
+5 rows in set (0.01 sec)
+
+mysql> desc loans;
++-------------------+-------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Field             | Type                                      | Null | Key | Default           | Extra                                         |
++-------------------+-------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| loanId            | int                                       | NO   | PRI | NULL              | auto_increment                                |
+| userId            | int                                       | YES  | MUL | NULL              |                                               |
+| adminId           | int                                       | YES  | MUL | NULL              |                                               |
+| loanType          | enum('Home','Personal','Auto','Business') | NO   |     | NULL              |                                               |
+| amount            | decimal(15,2)                             | NO   |     | NULL              |                                               |
+| interestRate      | decimal(5,2)                              | YES  |     | NULL              |                                               |
+| status            | enum('Pending','Approved','Rejected')     | NO   |     | NULL              |                                               |
+| created_at        | timestamp                                 | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
+| loanStatusUpdated | timestamp                                 | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++-------------------+-------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+9 rows in set (0.00 sec)
+
+mysql> desc login;
++------------+----------------------+------+-----+-------------------+-------------------+
+| Field      | Type                 | Null | Key | Default           | Extra             |
++------------+----------------------+------+-----+-------------------+-------------------+
+| id         | int                  | NO   | PRI | NULL              | auto_increment    |
+| email      | varchar(255)         | NO   | UNI | NULL              |                   |
+| password   | varchar(255)         | NO   |     | NULL              |                   |
+| role       | enum('admin','user') | NO   |     | NULL              |                   |
+| created_at | timestamp            | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+| admin_ref  | int                  | YES  | MUL | NULL              |                   |
+| user_ref   | int                  | YES  | MUL | NULL              |                   |
++------------+----------------------+------+-----+-------------------+-------------------+
+7 rows in set (0.00 sec)
+
+mysql> desc transactions;
++-----------------+-----------------------------------------+------+-----+-------------------+-------------------+
+| Field           | Type                                    | Null | Key | Default           | Extra             |
++-----------------+-----------------------------------------+------+-----+-------------------+-------------------+
+| transactionId   | int                                     | NO   | PRI | NULL              | auto_increment    |
+| userId          | int                                     | YES  | MUL | NULL              |                   |
+| transactionType | enum('Deposit','Withdrawal','Transfer') | NO   |     | NULL              |                   |
+| amount          | decimal(15,2)                           | NO   |     | NULL              |                   |
+| balanceAfter    | decimal(15,2)                           | YES  |     | NULL              |                   |
+| recipientUserId | int                                     | YES  | MUL | NULL              |                   |
+| transactionDate | timestamp                               | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++-----------------+-----------------------------------------+------+-----+-------------------+-------------------+
+7 rows in set (0.00 sec)
+
+mysql> desc view_customer_feedback;
++--------------+--------------+------+-----+-------------------+-------------------+
+| Field        | Type         | Null | Key | Default           | Extra             |
++--------------+--------------+------+-----+-------------------+-------------------+
+| feedbackId   | int          | NO   |     | 0                 |                   |
+| userId       | int          | YES  |     | NULL              |                   |
+| customerName | varchar(255) | YES  |     | NULL              |                   |
+| message      | text         | NO   |     | NULL              |                   |
+| date         | timestamp    | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+| adminReply   | text         | YES  |     | NULL              |                   |
++--------------+--------------+------+-----+-------------------+-------------------+
+
+mysql> desc view_customer_loan_status;
++--------------+-------------------------------------------+------+-----+-------------------+-------------------+
+| Field        | Type                                      | Null | Key | Default           | Extra             |
++--------------+-------------------------------------------+------+-----+-------------------+-------------------+
+| loanId       | int                                       | NO   |     | 0                 |                   |
+| userId       | int                                       | YES  |     | NULL              |                   |
+| customerName | varchar(255)                              | YES  |     | NULL              |                   |
+| loanType     | enum('Home','Personal','Auto','Business') | NO   |     | NULL              |                   |
+| amount       | decimal(15,2)                             | NO   |     | NULL              |                   |
+| interestRate | decimal(5,2)                              | YES  |     | NULL              |                   |
+| status       | enum('Pending','Approved','Rejected')     | NO   |     | NULL              |                   |
+| loanCreated  | timestamp                                 | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+| adminId      | int                                       | YES  |     | NULL              |                   |
++--------------+-------------------------------------------+------+-----+-------------------+-------------------+
+9 rows in set (0.00 sec)
+
+mysql> desc view_customer_transactions;
++-----------------+-----------------------------------------+------+-----+-------------------+-------------------+
+| Field           | Type                                    | Null | Key | Default           | Extra             |
++-----------------+-----------------------------------------+------+-----+-------------------+-------------------+
+| transactionId   | int                                     | NO   |     | 0                 |                   |
+| userId          | int                                     | YES  |     | NULL              |                   |
+| customerName    | varchar(255)                            | YES  |     | NULL              |                   |
+| transactionType | enum('Deposit','Withdrawal','Transfer') | NO   |     | NULL              |                   |
+| amount          | decimal(15,2)                           | NO   |     | NULL              |                   |
+| balanceAfter    | decimal(15,2)                           | YES  |     | NULL              |                   |
+| recipientUserId | int                                     | YES  |     | NULL              |                   |
+| transactionDate | timestamp                               | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++-----------------+-----------------------------------------+------+-----+-------------------+-------------------+
+8 rows in set (0.01 sec)
+
+mysql> desc view_total_loans_per_customer;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| userId          | int           | YES  |     | NULL    |       |
+| totalLoanAmount | decimal(37,2) | YES  |     | NULL    |       |
++-----------------+---------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+
+// MYSQL CODE :
+
+-- Create and select the database
+CREATE DATABASE IF NOT EXISTS banking_system;
+USE banking_system;
+
+-- Branch Table
+CREATE TABLE branch (
+    branchId INT PRIMARY KEY AUTO_INCREMENT,
+    branchNo VARCHAR(20) NOT NULL,
+    branchName VARCHAR(100) NOT NULL
+);
+
+-- Admin Table
+CREATE TABLE admin (
+    adminId INT PRIMARY KEY AUTO_INCREMENT,
+    branchId INT,
+    FOREIGN KEY (branchId) REFERENCES branch(branchId)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+);
+
+-- Customer Accounts Table
+CREATE TABLE customeraccounts (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    balance DECIMAL(15,2) DEFAULT 0.00,
+    cnic VARCHAR(20),
+    phone VARCHAR(15),
+    city VARCHAR(100),
+    address TEXT,
+    accountNo VARCHAR(20) UNIQUE,
+    branchId INT,
+    accountType ENUM('Savings', 'Current', 'Fixed Deposit') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    lastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    isEditable BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (branchId) REFERENCES branch(branchId)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+);
+
+-- Login Table
+CREATE TABLE login (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'user') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    admin_ref INT,
+    user_ref INT,
+    FOREIGN KEY (admin_ref) REFERENCES admin(adminId)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE,
+    FOREIGN KEY (user_ref) REFERENCES customeraccounts(id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+);
+
+-- Triggers for login table
+DELIMITER //
+
+CREATE TRIGGER check_login_role
+BEFORE INSERT ON login
+FOR EACH ROW
+BEGIN
+    IF (NEW.role = 'admin' AND (NEW.admin_ref IS NULL OR NEW.user_ref IS NOT NULL)) OR
+       (NEW.role = 'user' AND (NEW.user_ref IS NULL OR NEW.admin_ref IS NOT NULL)) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Invalid role-reference combination in login';
+    END IF;
+END;//
+
+CREATE TRIGGER check_login_role_update
+BEFORE UPDATE ON login
+FOR EACH ROW
+BEGIN
+    IF (NEW.role = 'admin' AND (NEW.admin_ref IS NULL OR NEW.user_ref IS NOT NULL)) OR
+       (NEW.role = 'user' AND (NEW.user_ref IS NULL OR NEW.admin_ref IS NOT NULL)) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Invalid role-reference combination in login (update)';
+    END IF;
+END;//
+
+-- Trigger for updating lastUpdated on customeraccounts
+CREATE TRIGGER trg_customer_update
+BEFORE UPDATE ON customeraccounts
+FOR EACH ROW
+BEGIN
+    IF OLD.isEditable = FALSE THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Customer details are locked and cannot be updated';
+    END IF;
+    SET NEW.lastUpdated = NOW();
+END;//
+
+-- Trigger for loan status change
+CREATE TRIGGER trg_loan_status_change
+AFTER UPDATE ON loans
+FOR EACH ROW
+BEGIN
+    IF OLD.status <> NEW.status THEN
+        INSERT INTO loan_audit_log (loanId, oldStatus, newStatus)
+        VALUES (OLD.loanId, OLD.status, NEW.status);
+    END IF;
+END;//
+
+-- Procedure for auto-approving small loans
+CREATE PROCEDURE auto_approve_small_loans()
+BEGIN
+    UPDATE loans 
+    SET status = 'Approved'
+    WHERE status = 'Pending'
+      AND amount <= 10000
+      AND userId IN (
+          SELECT id FROM customeraccounts WHERE balance >= 2000
+      );
+END;//
+
+-- Procedure to allow only admins to create customer accounts
+CREATE PROCEDURE create_customer_by_admin (
+    IN admin_id INT,
+    IN name VARCHAR(100),
+    IN balance DECIMAL(15,2),
+    IN cnic VARCHAR(20),
+    IN phone VARCHAR(15),
+    IN city VARCHAR(100),
+    IN address TEXT,
+    IN accountNo VARCHAR(20),
+    IN accountType ENUM('Savings', 'Current', 'Fixed Deposit')
+)
+BEGIN
+    DECLARE bId INT;
+
+    -- Get branch of the admin
+    SELECT branchId INTO bId FROM admin WHERE adminId = admin_id;
+
+    -- Insert new customer with admin's branch
+    INSERT INTO customeraccounts (
+        name, balance, cnic, phone, city, address, accountNo,
+        branchId, accountType
+    )
+    VALUES (
+        name, balance, cnic, phone, city, address, accountNo,
+        bId, accountType
+    );
+END;//
+
+DELIMITER ;
+
+-- Feedback Table
+CREATE TABLE feedback (
+    feedbackId INT PRIMARY KEY AUTO_INCREMENT,
+    userId INT,
+    message TEXT NOT NULL,
+    adminReply TEXT,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES customeraccounts(id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+);
+
+-- Loans Table
+CREATE TABLE loans (
+    loanId INT PRIMARY KEY AUTO_INCREMENT,
+    userId INT,
+    adminId INT,
+    loanType ENUM('Home', 'Personal', 'Auto', 'Business') NOT NULL,
+    amount DECIMAL(15,2) NOT NULL,
+    interestRate DECIMAL(5,2),
+    status ENUM('Pending', 'Approved', 'Rejected') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    loanStatusUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES customeraccounts(id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE,
+    FOREIGN KEY (adminId) REFERENCES admin(adminId)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+);
+
+-- Transactions Table
+CREATE TABLE transactions (
+    transactionId INT PRIMARY KEY AUTO_INCREMENT,
+    userId INT,
+    transactionType ENUM('Deposit', 'Withdrawal', 'Transfer') NOT NULL,
+    amount DECIMAL(15,2) NOT NULL,
+    balanceAfter DECIMAL(15,2),
+    recipientUserId INT,
+    transactionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES customeraccounts(id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE,
+    FOREIGN KEY (recipientUserId) REFERENCES customeraccounts(id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+);
+
+-- Audit Log Table for Loan Status Changes
+CREATE TABLE loan_audit_log (
+    logId INT AUTO_INCREMENT PRIMARY KEY,
+    loanId INT,
+    oldStatus ENUM('Pending','Approved','Rejected'),
+    newStatus ENUM('Pending','Approved','Rejected'),
+    changedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Views
+CREATE VIEW view_customer_transactions AS
+SELECT 
+    t.transactionId,
+    t.userId,
+    c.name AS customerName,
+    t.transactionType,
+    t.amount,
+    t.balanceAfter,
+    t.recipientUserId,
+    t.transactionDate
+FROM transactions t
+JOIN customeraccounts c ON t.userId = c.id;
+
+CREATE VIEW view_customer_loan_status AS
+SELECT 
+    l.loanId,
+    l.userId,
+    c.name AS customerName,
+    l.loanType,
+    l.amount,
+    l.interestRate,
+    l.status,
+    l.created_at AS loanCreated,
+    l.adminId
+FROM loans l
+JOIN customeraccounts c ON l.userId = c.id;
+
+CREATE VIEW view_total_loans_per_customer AS
+SELECT 
+    userId,
+    SUM(amount) AS totalLoanAmount
+FROM loans
+GROUP BY userId;
+
+CREATE VIEW view_customer_feedback AS
+SELECT 
+    f.feedbackId,
+    f.userId,
+    c.name AS customerName,
+    f.message,
+    f.date,
+    f.adminReply
+FROM feedback f
+JOIN customeraccounts c ON f.userId = c.id;
+
+-- Optional Indexes
+CREATE INDEX idx_customer_branch ON customeraccounts(branchId);
+CREATE INDEX idx_admin_branch ON admin(branchId);
+CREATE INDEX idx_loan_user ON loans(userId);
+CREATE INDEX idx_loan_admin ON loans(adminId);
+CREATE INDEX idx_feedback_user ON feedback(userId);
+CREATE INDEX idx_tx_user ON transactions(userId);
+CREATE INDEX idx_tx_recipient ON transactions(recipientUserId);
