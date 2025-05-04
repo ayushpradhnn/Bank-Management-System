@@ -363,15 +363,6 @@ CREATE TABLE transactions (
         ON UPDATE CASCADE
 );
 
--- Audit Log Table for Loan Status Changes
-CREATE TABLE loan_audit_log (
-    logId INT AUTO_INCREMENT PRIMARY KEY,
-    loanId INT,
-    oldStatus ENUM('Pending','Approved','Rejected'),
-    newStatus ENUM('Pending','Approved','Rejected'),
-    changedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Views
 CREATE VIEW view_customer_transactions AS
 SELECT 
