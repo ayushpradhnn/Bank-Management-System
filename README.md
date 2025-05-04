@@ -58,9 +58,7 @@ Language: Python 3
 Clone the repository:
 
 bash
-Copy
-Edit
-git clone https://github.com/your-username/your-repo-name.git
+
 Install dependencies:
 
 bash
